@@ -1,0 +1,4 @@
+# pnpm settings (pnpm 11 no longer reads the package.json "pnpm" field).
+# Allow esbuild's install script to run — tsup builds the ESM runtime through it.
+allowBuilds:
+  esbuild: true
