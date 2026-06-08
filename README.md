@@ -77,6 +77,160 @@ concern — built on `subscribe`.
 | `@qovira/theme/runtime` | `dist/runtime.js` | get/set/persist toggle API                |
 | `@qovira/theme/boot`    | `dist/boot.js`    | the raw pre-paint string, for inlining    |
 
+## Component recipes
+
+These are **reference patterns, not shipped components.** `@qovira/theme` has no
+framework dependency and ships only tokens, utilities, and fonts — a component
+library is built _on top_ of it, separately, in app code. The class strings
+below are copy-pasteable and built entirely from the semantic layer, so **one
+recipe is correct in both Daylight and Evening** with no per-theme edits — the
+`data-theme` attribute on `<html>` does the switching.
+
+### Headings
+
+Pair a family utility with a role size token (font-family isn't carried by the
+`text-*` tokens):
+
+```
+font-display text-h1
+font-display text-h2
+font-sans text-h4
+```
+
+Body copy uses `text-body`, caps measure at `max-w-[70ch]`, and always uses
+`text-text` (never `text-text-muted`).
+
+### Button
+
+Shared base (all variants). Touch contexts bump `h-10` → `h-11` (≥44px):
+
+```
+inline-flex items-center justify-center gap-2 rounded-md text-button h-10 px-4
+select-none transition-[background,box-shadow,transform] duration-micro ease-qovira
+focus-ring disabled:opacity-50 disabled:pointer-events-none
+```
+
+Primary — espresso (Daylight) ↔ honey (Evening), automatic via `--btn-primary`:
+
+```
+bg-btn-primary text-btn-primary-fg hover:bg-btn-primary-hover active:bg-btn-primary-active active:scale-[.99]
+```
+
+Key-CTA — the single most important action; raw honey in both themes. Only
+**one** per view (the ≤10% accent rule):
+
+```
+bg-accent text-warm-900 hover:bg-honey-600 active:bg-honey-700
+```
+
+Secondary — hairline-bordered:
+
+```
+bg-transparent text-text border border-border hover:bg-surface-raised active:bg-warm-200/40
+```
+
+Ghost — text-only:
+
+```
+bg-transparent text-link hover:bg-link/8 active:bg-link/12
+```
+
+Destructive — pair with a confirm for irreversible actions:
+
+```
+bg-error text-white hover:brightness-95 active:brightness-90
+```
+
+### Input
+
+```
+flex h-10 w-full rounded-md px-3 text-body bg-surface-raised text-text border border-border
+placeholder:text-text-muted focus-ring aria-[invalid=true]:border-error disabled:opacity-50
+```
+
+Label uses `text-label text-text-muted`; helper/error text uses `text-small`,
+with the error message in:
+
+```
+text-small text-error-text
+```
+
+Never rely on the red border alone — set `aria-invalid` and show the message.
+
+### Card / panel
+
+```
+rounded-lg bg-surface-raised border border-border p-6 shadow-[var(--shadow-sm)]
+```
+
+Interactive cards add:
+
+```
+focus-ring hover:shadow-[var(--shadow-md)] transition-shadow duration-base ease-qovira
+```
+
+Modals / dialogs use:
+
+```
+rounded-xl shadow-[var(--shadow-lg)]
+```
+
+### Focus
+
+Every interactive element gets the brand's non-negotiable ring. Never removed,
+never a bare `outline: none`:
+
+```
+focus-ring
+```
+
+### Lamp-glow
+
+The signature honey motif — focus emphasis, loaders, special moments; **never**
+general elevation. Static halo:
+
+```
+lamp-glow
+```
+
+As a loader, drive the pulse on a honey radial-gradient. Always provide a
+static / `aria-live` fallback so meaning isn't trapped in animation (the pulse is
+collapsed under `prefers-reduced-motion`):
+
+```
+lamp-glow-pulse
+```
+
+### Chip / pill
+
+```
+inline-flex items-center gap-1 rounded-sm h-7 px-2.5 text-small bg-surface-raised text-text-muted border border-border
+```
+
+Status chips swap to the matching tint/text **with an icon** — never color
+alone:
+
+```
+bg-success-tint text-success-text
+```
+
+Use `rounded-full` only for true pills, toggles, and avatars.
+
+### Guardrails
+
+- **Accent discipline.** Honey covers ≤ ~10% of any screen. Primary actions are
+  espresso (Daylight) / honey (Evening); raw honey is reserved for the one
+  Key-CTA, focus, and highlights.
+- **Accent never signals status.** Status uses the semantic colors only — honey
+  and warning-amber stay distinct so "heads up" never reads as "brand".
+- **Never color alone.** Every status pairs color with an icon or text label;
+  error inputs get `aria-invalid` + a message, not just a red border.
+- **Focus is never removed.** Always the visible 2px honey ring via `focus-ring`;
+  no bare `outline: none`.
+- **Type.** Body copy always uses `text-text`, never `text-text-muted` (muted is
+  for genuinely secondary text — timestamps, counts, hints).
+- **Hit targets.** ≥40px desktop (`h-10`), ≥44px touch (`h-11`).
+
 ## Development
 
 ```sh
