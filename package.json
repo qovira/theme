@@ -10,6 +10,12 @@
     "css"
   ],
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qovira/theme.git"
+  },
+  "homepage": "https://github.com/qovira/theme#readme",
+  "bugs": "https://github.com/qovira/theme/issues",
   "type": "module",
   "packageManager": "pnpm@11.3.0",
   "engines": {
