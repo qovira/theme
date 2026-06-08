@@ -266,6 +266,79 @@
   --color-info-text: var(--info-text);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+ * Utilities + motion guard. A few `@utility` definitions so components don't
+ * reinvent them, plus the global reduced-motion reset. These consume the
+ * primitive (`--ease-qovira`, `--duration-*`) and semantic (`--surface`,
+ * `--focus-ring`, `--lamp-glow`) tokens.
+ *
+ * `ease-qovira` is NOT defined here — it generates natively from the
+ * `--ease-qovira` primitive in the `--ease-*` namespace.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/* The brand's non-negotiable focus ring: a 2px surface gap then a 2px honey
+ * ring. Applied to every interactive element; never removed. */
+@utility focus-ring {
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--surface),
+      0 0 0 4px var(--focus-ring);
+  }
+}
+
+/* The signature lamp glow — a soft honey halo for focus emphasis, loaders, and
+ * special moments (never general elevation). */
+@utility lamp-glow {
+  box-shadow: var(--lamp-glow);
+}
+
+/* Loader form: a ~1200ms pulse driving the `qovira-pulse` keyframe. Pair with a
+ * honey radial-gradient background and a static / aria-live fallback so meaning
+ * is never trapped in animation. Collapsed by the reduced-motion guard below. */
+@utility lamp-glow-pulse {
+  animation: qovira-pulse 1200ms var(--ease-qovira) infinite;
+}
+
+@keyframes qovira-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Duration shorthands — v4 has no duration theme namespace, so these expose the
+ * `--duration-*` custom properties as `transition-duration` utilities. */
+@utility duration-micro {
+  transition-duration: var(--duration-micro);
+}
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
+@utility duration-overlay {
+  transition-duration: var(--duration-overlay);
+}
+
+/* Global reduced-motion guard — one reset so consumers don't each reinvent it.
+ * Meaning is never trapped in animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* For the rare genuine structural (non-color) theme branch — most differences
+ * should be absorbed by the semantic layer, not this variant. */
+@custom-variant evening (&:where([data-theme="evening"] *));
+
 /*
  * Spacing is intentionally NOT redefined. Brand's 4px base = 0.25rem = Tailwind
  * v4's default --spacing step exactly, so the brand scale
