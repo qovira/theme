@@ -1,7 +1,45 @@
 /*
- * @qovira/theme/fonts — self-hosted @font-face (placeholder).
+ * @qovira/theme/fonts — self-hosted @font-face.
  *
- * Will hold the @font-face declarations for the variable woff2 (Fraunces,
- * Figtree, JetBrains Mono) with `font-display: swap` and the brand fallback
- * stacks. The binaries ship alongside this file under `fonts/`.
+ * The three brand families ship as variable woff2 bundled in this package under
+ * `fonts/` and referenced with RELATIVE urls, so there is no font-CDN and no
+ * external request (the privacy-and-offline ethos). A consumer's Vite build
+ * fingerprints these files and serves them from the consumer's own origin.
+ *
+ * `font-display: swap` renders the fallback stack immediately, then swaps to the
+ * web font once loaded — the fallback stacks live on the `--font-*` tokens
+ * (Fraunces→Georgia→serif, Figtree→system-ui→sans-serif,
+ * JetBrains Mono→ui-monospace→monospace), so layout holds before the swap.
+ *
+ * Each is a single variable file spanning the weight axis. Fraunces also carries
+ * its optical-size, SOFT and WONK axes — `font-optical-sizing: auto` (the CSS
+ * default) drives opsz automatically; SOFT/WONK can be tuned per use via
+ * `font-variation-settings` (the brand default is gentle SOFT, WONK off).
+ *
+ * Fonts are licensed under the SIL Open Font License 1.1; see the per-family
+ * OFL texts alongside the woff2 in `fonts/`.
  */
+
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("./fonts/fraunces-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Figtree";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 900;
+  src: url("./fonts/figtree-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url("./fonts/jetbrains-mono-variable.woff2") format("woff2");
+}
