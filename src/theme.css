@@ -1,0 +1,12 @@
+/*
+ * @qovira/theme — token entry (placeholder).
+ *
+ * The three-layer token architecture lands here:
+ *   - Layer 1 — @theme primitives (QOV-3)
+ *   - Layer 2 — semantic [data-theme] aliases (QOV-4)
+ *   - Layer 3 — @theme inline exposure (QOV-4)
+ *   - utilities + motion guard (QOV-7)
+ *
+ * Consumers import this AFTER `@import "tailwindcss";` so the @theme blocks
+ * extend the Tailwind defaults rather than precede them.
+ */

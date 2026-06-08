@@ -1,0 +1,56 @@
+{
+  "name": "@qovira/theme",
+  "version": "0.0.0",
+  "description": "Qovira's visual foundation — Tailwind v4 tokens, self-hosted fonts, and a framework-agnostic theming runtime.",
+  "keywords": [
+    "qovira",
+    "design-tokens",
+    "tailwindcss",
+    "theme",
+    "css"
+  ],
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "pnpm@11.3.0",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./dist/theme.css",
+    "./fonts": "./dist/fonts.css",
+    "./runtime": "./dist/runtime.js",
+    "./boot": "./dist/boot.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/copy-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tsconfig/strictest": "^2.0.8",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
+    "tailwindcss": "^4.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.1",
+    "vitest": "^4.1.8"
+  }
+}
