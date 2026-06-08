@@ -7,7 +7,7 @@ export default tseslint.config(
   { ignores: ["dist", "node_modules", "coverage"] },
   js.configs.recommended,
   {
-    files: ["src/**/*.ts", "*.config.ts"],
+    files: ["src/**/*.ts", "tests/**/*.ts", "*.config.ts"],
     extends: [
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,

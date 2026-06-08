@@ -1,12 +1,156 @@
 /*
- * @qovira/theme — token entry (placeholder).
+ * @qovira/theme — token entry.
  *
- * The three-layer token architecture lands here:
- *   - Layer 1 — @theme primitives (QOV-3)
- *   - Layer 2 — semantic [data-theme] aliases (QOV-4)
- *   - Layer 3 — @theme inline exposure (QOV-4)
- *   - utilities + motion guard (QOV-7)
+ * Three-layer token architecture:
+ *   - Layer 1 — @theme primitives (this file, theme-agnostic)
+ *   - Layer 2 — semantic [data-theme] aliases (theme-aware)
+ *   - Layer 3 — @theme inline exposure of the semantic layer
+ *   - utilities (focus-ring, lamp-glow, duration-*) + the motion guard
  *
- * Consumers import this AFTER `@import "tailwindcss";` so the @theme blocks
- * extend the Tailwind defaults rather than precede them.
+ * Consumers import this AFTER `@import "tailwindcss";` so these @theme blocks
+ * EXTEND the Tailwind defaults rather than precede them.
+ *
+ * All values are transcribed verbatim from Brand & Design (design doc §5).
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Layer 1 — Primitives (theme-agnostic; identical in Daylight and Evening).
+ * Declared in @theme so Tailwind generates the usual utilities
+ * (bg-honey-500, text-warm-700, rounded-md, font-display, text-h1, ease-qovira).
+ * ──────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Warm neutrals — espresso ↔ cream ramp */
+  --color-warm-50: #faf6ef;
+  --color-warm-100: #f1e9dc;
+  --color-warm-200: #e6dac8;
+  --color-warm-300: #d4c4ad;
+  --color-warm-400: #b09a7e;
+  --color-warm-500: #8a745b;
+  --color-warm-600: #6b563f;
+  --color-warm-700: #4a3a2a;
+  --color-warm-800: #2c2118;
+  --color-warm-900: #1e1712;
+
+  /* Honey accent ramp — 500 = brand honey; 700 = AA-safe on cream; 600 = hover/press */
+  --color-honey-50: #fcf3e4;
+  --color-honey-100: #f8e6c8;
+  --color-honey-200: #f1d199;
+  --color-honey-300: #ebbe74;
+  --color-honey-400: #e5b063;
+  --color-honey-500: #e0a458;
+  --color-honey-600: #c9883c;
+  --color-honey-700: #a66b28;
+  --color-honey-800: #7e4f1c;
+  --color-honey-900: #573514;
+
+  /* Clay secondary ramp */
+  --color-clay-400: #d08c66;
+  --color-clay-500: #c2754c;
+  --color-clay-600: #a85f3a;
+  --color-clay-700: #8a4b2c;
+
+  /* Status base colors — reserved for meaning, never decoration.
+   * Per-theme tint/text aliases live in the semantic layer. */
+  --color-success: #2f9e6b;
+  --color-warning: #e08a1e;
+  --color-error: #d6452e;
+  --color-info: #3b72c0;
+
+  /* Font families. font-family is intentionally NOT carried by the --text-*
+   * tokens below; headings pair the size token with a family utility, e.g.
+   * `font-display text-h1` (see the component recipes in the README). */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Figtree", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Radius — overrides Tailwind's defaults; md (10px) is the default for
+   * buttons and inputs. Brand owns these names. */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 999px;
+
+  /* Type scale — role tokens carrying size + line-height + letter-spacing +
+   * weight via the v4 modifier syntax. (text-label additionally pairs with the
+   * `uppercase` utility in recipes; text-transform is not expressible on a
+   * --text-* token.) */
+  --text-display: 3.25rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.01em;
+  --text-display--font-weight: 500;
+
+  --text-h1: 2.375rem;
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h1--font-weight: 500;
+
+  --text-h2: 1.75rem;
+  --text-h2--line-height: 1.18;
+  --text-h2--letter-spacing: -0.005em;
+  --text-h2--font-weight: 500;
+
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.25;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1.125rem;
+  --text-h4--line-height: 1.3;
+  --text-h4--font-weight: 600;
+
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-lead--font-weight: 400;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.55;
+  --text-small--font-weight: 400;
+
+  --text-button: 0.875rem;
+  --text-button--letter-spacing: 0.005em;
+  --text-button--font-weight: 500;
+
+  --text-label: 0.75rem;
+  --text-label--letter-spacing: 0.08em;
+  --text-label--font-weight: 600;
+
+  --text-code: 0.875rem;
+  --text-code--line-height: 1.6;
+  --text-code--font-weight: 400;
+
+  /* Motion — easing in the --ease-* namespace so `ease-qovira` generates
+   * natively. (Duration shorthands `duration-micro|base|overlay` are defined as
+   * @utility rules alongside the other utilities; the raw values live below.) */
+  --ease-qovira: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Plain custom properties — NOT Tailwind utility namespaces, so they emit as
+ * regular CSS variables (no utilities generated).
+ *   - durations: consumed by the duration-* @utility shorthands
+ *   - z-index (spec addition): referenced via arbitrary values, e.g.
+ *     `z-[var(--z-modal)]`
+ * ──────────────────────────────────────────────────────────────────────── */
+:root {
+  --duration-micro: 140ms;
+  --duration-base: 200ms;
+  --duration-overlay: 280ms;
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-overlay: 1200;
+  --z-modal: 1300;
+  --z-toast: 1400;
+}
+
+/*
+ * Spacing is intentionally NOT redefined. Brand's 4px base = 0.25rem = Tailwind
+ * v4's default --spacing step exactly, so the brand scale
+ * (4·8·12·16·20·24·32·40·48·64) maps 1:1 to p-1 p-2 p-3 p-4 p-5 p-6 p-8 p-10
+ * p-12 p-16. Rule: no off-grid spacing values — always use the scale steps.
  */

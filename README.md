@@ -10,9 +10,8 @@ brand stays identical across them without copy-paste.
 The package is the _foundation_ a component library is built on — it ships only
 tokens, fonts, and a tiny runtime, and has **no framework dependency**.
 
-> Status: scaffold. Tokens, fonts, runtime, and utilities land across the
-> Theme Library project issues (QOV-3 … QOV-8); the entry points below currently
-> resolve to placeholders.
+> Status: early development. Tokens, fonts, runtime, and utilities are being
+> filled in; some entry points still resolve to placeholders.
 
 ## Install
 
