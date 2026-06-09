@@ -1,0 +1,14 @@
+# @qovira/theme
+
+## 1.0.2
+
+### Patch Changes
+
+- c8d9d21: Darken `--color-error` (`#d6452e` → `#cc4029`) so white text on a `bg-error`
+  fill — the destructive button — clears WCAG AA (now 4.85:1, was 4.42:1). The
+  error red stays a single token; borders, icons, and the independent
+  `--error-tint` / `--error-text` pairings are unaffected. A contrast test now
+  locks white-on-`error` at AA so it can't regress.
+- 6b32946: Reformat the shipped `theme.css` with the standardized Prettier config
+  (`printWidth: 180`). No token, utility, runtime, or API changes — the output is
+  semantically identical; only source formatting differs.
