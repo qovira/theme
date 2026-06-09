@@ -18,7 +18,11 @@ concurrency:
 
 jobs:
   publish:
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    # Exception to the house "every job on Blacksmith" rule: npm provenance
+    # (sigstore) is only attestable from GitHub-hosted runners — Blacksmith
+    # reports as "self-hosted", which the registry rejects with a 422. This is
+    # the one job that must run on a GitHub-hosted runner.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
