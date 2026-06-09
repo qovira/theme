@@ -33,8 +33,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-const themeOf = (): string | null =>
-  document.documentElement.getAttribute("data-theme");
+const themeOf = (): string | null => document.documentElement.getAttribute("data-theme");
 
 describe("boot snippet", () => {
   it("exports a non-empty string for inlining in <head>", () => {

@@ -4,9 +4,7 @@ import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/postcss";
 import postcss from "postcss";
 
-const themeCssPath = fileURLToPath(
-  new URL("../src/theme.css", import.meta.url),
-);
+const themeCssPath = fileURLToPath(new URL("../src/theme.css", import.meta.url));
 
 /**
  * Compile `src/theme.css` through Tailwind v4 exactly as a consumer would
@@ -15,15 +13,9 @@ const themeCssPath = fileURLToPath(
  * tests can assert on both the `:root` variable declarations and the generated
  * utility rules.
  */
-export async function compileTheme(
-  candidates: readonly string[],
-): Promise<string> {
+export async function compileTheme(candidates: readonly string[]): Promise<string> {
   const theme = readFileSync(themeCssPath, "utf8");
-  const input = [
-    `@import "tailwindcss";`,
-    theme,
-    `@source inline("${candidates.join(" ")}");`,
-  ].join("\n");
+  const input = [`@import "tailwindcss";`, theme, `@source inline("${candidates.join(" ")}");`].join("\n");
 
   const result = await postcss([tailwindcss()]).process(input, {
     from: themeCssPath,

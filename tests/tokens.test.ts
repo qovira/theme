@@ -55,12 +55,8 @@ describe("primitive design tokens", () => {
 
   it("generates color utilities that track the ramp variables", async () => {
     const css = await compileTheme(["bg-honey-500", "text-warm-700"]);
-    expect(ruleBody(css, ".bg-honey-500")).toContain(
-      "background-color: var(--color-honey-500)",
-    );
-    expect(ruleBody(css, ".text-warm-700")).toContain(
-      "color: var(--color-warm-700)",
-    );
+    expect(ruleBody(css, ".bg-honey-500")).toContain("background-color: var(--color-honey-500)");
+    expect(ruleBody(css, ".text-warm-700")).toContain("color: var(--color-warm-700)");
   });
 
   it("overrides the radius scale (rounded-md = 10px)", async () => {
@@ -70,21 +66,15 @@ describe("primitive design tokens", () => {
     expect(css).toContain("--radius-lg: 14px");
     expect(css).toContain("--radius-xl: 18px");
     expect(css).toContain("--radius-full: 999px");
-    expect(ruleBody(css, ".rounded-md")).toContain(
-      "border-radius: var(--radius-md)",
-    );
+    expect(ruleBody(css, ".rounded-md")).toContain("border-radius: var(--radius-md)");
   });
 
   it("defines the font families and generates font utilities", async () => {
     const css = await compileTheme(["font-display"]);
     expect(css).toContain(`--font-display: "Fraunces", Georgia, serif`);
     expect(css).toContain(`--font-sans: "Figtree", system-ui, sans-serif`);
-    expect(css).toContain(
-      `--font-mono: "JetBrains Mono", ui-monospace, monospace`,
-    );
-    expect(ruleBody(css, ".font-display")).toContain(
-      "font-family: var(--font-display)",
-    );
+    expect(css).toContain(`--font-mono: "JetBrains Mono", ui-monospace, monospace`);
+    expect(ruleBody(css, ".font-display")).toContain("font-family: var(--font-display)");
   });
 
   it("carries size + line-height + letter-spacing + weight on type tokens", async () => {

@@ -1,12 +1,7 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  getTheme,
-  setTheme,
-  subscribe,
-  toggleTheme,
-} from "../src/runtime/theme.js";
+import { getTheme, setTheme, subscribe, toggleTheme } from "../src/runtime/theme.js";
 
 const KEY = "qovira-theme";
 
@@ -19,8 +14,7 @@ function setSystemDark(dark: boolean): void {
   }));
 }
 
-const themeAttr = (): string | null =>
-  document.documentElement.getAttribute("data-theme");
+const themeAttr = (): string | null => document.documentElement.getAttribute("data-theme");
 
 beforeEach(() => {
   localStorage.clear();
@@ -100,25 +94,19 @@ describe("subscribe", () => {
 
     // Simulate another tab writing the key, then the browser delivering the event.
     localStorage.setItem(KEY, "daylight");
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: KEY, newValue: "daylight" }),
-    );
+    window.dispatchEvent(new StorageEvent("storage", { key: KEY, newValue: "daylight" }));
     expect(seen).toEqual(["daylight"]);
     expect(themeAttr()).toBe("daylight");
 
     // Another tab clearing the key → follow system (stub: dark → evening).
     setSystemDark(true);
     localStorage.removeItem(KEY);
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: KEY, newValue: null }),
-    );
+    window.dispatchEvent(new StorageEvent("storage", { key: KEY, newValue: null }));
     expect(seen).toEqual(["daylight", "evening"]);
     expect(themeAttr()).toBe("evening");
 
     // Unrelated key changes are ignored.
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: "other", newValue: "x" }),
-    );
+    window.dispatchEvent(new StorageEvent("storage", { key: "other", newValue: "x" }));
     expect(seen).toEqual(["daylight", "evening"]);
 
     unsubscribe();

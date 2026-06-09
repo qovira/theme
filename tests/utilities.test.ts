@@ -35,27 +35,15 @@ describe("focus / lamp-glow / motion utilities", () => {
 
   it("lamp-glow-pulse drives the qovira-pulse keyframe at ~1200ms", async () => {
     const css = await compileTheme(["lamp-glow-pulse"]);
-    expect(rule(css, ".lamp-glow-pulse")).toMatch(
-      /animation:\s*qovira-pulse\s+1200ms/,
-    );
+    expect(rule(css, ".lamp-glow-pulse")).toMatch(/animation:\s*qovira-pulse\s+1200ms/);
     expect(css).toContain("@keyframes qovira-pulse");
   });
 
   it("duration-micro|base|overlay set transition-duration to the tokens", async () => {
-    const css = await compileTheme([
-      "duration-micro",
-      "duration-base",
-      "duration-overlay",
-    ]);
-    expect(rule(css, ".duration-micro")).toContain(
-      "transition-duration: var(--duration-micro)",
-    );
-    expect(rule(css, ".duration-base")).toContain(
-      "transition-duration: var(--duration-base)",
-    );
-    expect(rule(css, ".duration-overlay")).toContain(
-      "transition-duration: var(--duration-overlay)",
-    );
+    const css = await compileTheme(["duration-micro", "duration-base", "duration-overlay"]);
+    expect(rule(css, ".duration-micro")).toContain("transition-duration: var(--duration-micro)");
+    expect(rule(css, ".duration-base")).toContain("transition-duration: var(--duration-base)");
+    expect(rule(css, ".duration-overlay")).toContain("transition-duration: var(--duration-overlay)");
   });
 
   it("ships the global reduced-motion guard", async () => {

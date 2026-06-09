@@ -26,9 +26,7 @@ function resolve(): Theme {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (isTheme(stored)) return stored;
-    return matchMedia("(prefers-color-scheme: dark)").matches
-      ? "evening"
-      : "daylight";
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "evening" : "daylight";
   } catch {
     return "evening";
   }

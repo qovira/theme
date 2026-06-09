@@ -5,10 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { compileTheme } from "./compile.js";
 
-const readme = readFileSync(
-  fileURLToPath(new URL("../README.md", import.meta.url)),
-  "utf8",
-);
+const readme = readFileSync(fileURLToPath(new URL("../README.md", import.meta.url)), "utf8");
 
 /** The "## Component recipes" section, up to the next top-level heading. */
 function recipesSection(): string {
@@ -21,9 +18,7 @@ function recipesSection(): string {
 
 /** Every utility class token from the fenced code blocks in the section. */
 function recipeClasses(): string[] {
-  const blocks = [
-    ...recipesSection().matchAll(/```[a-z]*\n([\s\S]*?)```/g),
-  ].map((m) => m[1] ?? "");
+  const blocks = [...recipesSection().matchAll(/```[a-z]*\n([\s\S]*?)```/g)].map((m) => m[1] ?? "");
   const tokens = blocks.flatMap((b) => b.split(/\s+/)).filter(Boolean);
   return [...new Set(tokens)];
 }
@@ -42,24 +37,15 @@ describe("component recipes", () => {
     // `.<class>` regardless of escaping. A typo'd / nonexistent utility would
     // generate no rule and fail here.
     const deBackslashed = css.replaceAll("\\", "");
-    const unresolved = classes.filter(
-      (cls) => !deBackslashed.includes(`.${cls}`),
-    );
-    expect(
-      unresolved,
-      `unresolved utilities: ${unresolved.join(", ")}`,
-    ).toEqual([]);
+    const unresolved = classes.filter((cls) => !deBackslashed.includes(`.${cls}`));
+    expect(unresolved, `unresolved utilities: ${unresolved.join(", ")}`).toEqual([]);
   });
 
   it("recipe utilities are semantic, so one recipe serves both themes", async () => {
     // Spot-check that the recipe's semantic classes emit var(--…) (theme-tracking)
     // rather than frozen values — this is what makes a single recipe correct in
     // Daylight and Evening with no per-theme edits.
-    const css = await compileTheme([
-      "bg-btn-primary",
-      "text-text",
-      "bg-success-tint",
-    ]);
+    const css = await compileTheme(["bg-btn-primary", "text-text", "bg-success-tint"]);
     expect(css).toContain("var(--btn-primary)");
     expect(css).toContain("var(--text)");
     expect(css).toContain("var(--success-tint)");

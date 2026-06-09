@@ -117,41 +117,24 @@ describe("Daylight and Evening themes", () => {
       "text-info-text",
     ]);
     expect(ruleBody(css, ".bg-surface")).toContain("var(--surface)");
-    expect(ruleBody(css, ".bg-surface-raised")).toContain(
-      "var(--surface-raised)",
-    );
+    expect(ruleBody(css, ".bg-surface-raised")).toContain("var(--surface-raised)");
     expect(ruleBody(css, ".text-text")).toContain("var(--text)");
     expect(ruleBody(css, ".text-text-muted")).toContain("var(--text-muted)");
     expect(ruleBody(css, ".border-border")).toContain("var(--border-hairline)");
     expect(ruleBody(css, ".bg-accent")).toContain("var(--accent)");
     expect(ruleBody(css, ".text-link")).toContain("var(--link)");
     expect(ruleBody(css, ".bg-btn-primary")).toContain("var(--btn-primary)");
-    expect(ruleBody(css, ".text-btn-primary-fg")).toContain(
-      "var(--btn-primary-fg)",
-    );
+    expect(ruleBody(css, ".text-btn-primary-fg")).toContain("var(--btn-primary-fg)");
     for (const role of ["success", "warning", "error", "info"]) {
-      expect(ruleBody(css, `.bg-${role}-tint`)).toContain(
-        `var(--${role}-tint)`,
-      );
-      expect(ruleBody(css, `.text-${role}-text`)).toContain(
-        `var(--${role}-text)`,
-      );
+      expect(ruleBody(css, `.bg-${role}-tint`)).toContain(`var(--${role}-tint)`);
+      expect(ruleBody(css, `.text-${role}-text`)).toContain(`var(--${role}-text)`);
     }
   });
 
   it("diverges the two themes (a single attribute switch flips every role)", () => {
     // For the roles that carry meaning, Daylight and Evening must differ, which
     // is what makes `data-theme` alone repaint the UI with no component edits.
-    for (const token of [
-      "--surface",
-      "--surface-raised",
-      "--text",
-      "--text-muted",
-      "--border-hairline",
-      "--link",
-      "--btn-primary",
-      "--btn-primary-fg",
-    ]) {
+    for (const token of ["--surface", "--surface-raised", "--text", "--text-muted", "--border-hairline", "--link", "--btn-primary", "--btn-primary-fg"]) {
       expect(daylight[token], token).not.toBe(evening[token]);
     }
   });

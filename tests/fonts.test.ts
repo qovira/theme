@@ -3,9 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-const fontsCssPath = fileURLToPath(
-  new URL("../src/fonts.css", import.meta.url),
-);
+const fontsCssPath = fileURLToPath(new URL("../src/fonts.css", import.meta.url));
 const fontsDir = fileURLToPath(new URL("../src/fonts/", import.meta.url));
 const css = readFileSync(fontsCssPath, "utf8");
 
@@ -30,15 +28,12 @@ const families = [
 ] as const;
 
 describe("self-hosted fonts", () => {
-  it.each(families)(
-    "$family has a swap @font-face referencing a relative woff2",
-    ({ family, file, weight }) => {
-      const block = face(family);
-      expect(block).toContain("font-display: swap");
-      expect(block).toContain(`font-weight: ${weight}`);
-      expect(block).toContain(`url("./fonts/${file}") format("woff2")`);
-    },
-  );
+  it.each(families)("$family has a swap @font-face referencing a relative woff2", ({ family, file, weight }) => {
+    const block = face(family);
+    expect(block).toContain("font-display: swap");
+    expect(block).toContain(`font-weight: ${weight}`);
+    expect(block).toContain(`url("./fonts/${file}") format("woff2")`);
+  });
 
   it("ships every referenced woff2 as a real woff2 binary", () => {
     for (const { file } of families) {
@@ -67,9 +62,7 @@ describe("self-hosted fonts", () => {
       const [lo, hi] = range.split(" ").map(Number) as [number, number];
       return w >= lo && w <= hi;
     };
-    expect(
-      ["100 900"].every((r) => [500, 600].every((w) => inRange(r, w))),
-    ).toBe(true);
+    expect(["100 900"].every((r) => [500, 600].every((w) => inRange(r, w)))).toBe(true);
     for (const w of [400, 500, 600]) expect(inRange("300 900", w)).toBe(true);
   });
 });

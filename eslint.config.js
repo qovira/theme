@@ -8,10 +8,7 @@ export default tseslint.config(
   js.configs.recommended,
   {
     files: ["src/**/*.ts", "tests/**/*.ts", "*.config.ts"],
-    extends: [
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-    ],
+    extends: [...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked],
     languageOptions: {
       parserOptions: {
         projectService: true,
