@@ -10,7 +10,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # required for npm provenance attestation (OIDC → Sigstore)
+  id-token: write # OIDC: trusted-publishing auth + provenance attestation
 
 concurrency:
   group: release-${{ github.ref }}
@@ -28,9 +28,8 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       # Guard: the tag is the source of truth. A tag whose version does not
       # match package.json fails here, before anything is published.
@@ -52,10 +51,10 @@ jobs:
 
       # Scoped public publish with a signed provenance attestation. The tarball
       # is restricted to dist/ via package.json "files". --no-git-checks because
-      # the tag checkout is detached. Auth via the NPM_TOKEN automation token
-      # (no token is committed). An npm trusted-publisher (OIDC) setup is a
-      # viable future alternative to this long-lived token.
+      # the tag checkout is detached. Auth is OIDC trusted publishing: npm
+      # exchanges the workflow's id-token with the registry, so no NPM_TOKEN is
+      # needed. NODE_AUTH_TOKEN is deliberately left unset — even an empty value
+      # would suppress the OIDC path. OIDC requires npm >= 11.5.1; Node 24 LTS
+      # bundles npm 11.9+, so `pnpm publish` (which shells out to it) is fine.
       - name: Publish to npm
         run: pnpm publish --access public --provenance --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
