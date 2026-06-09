@@ -57,12 +57,7 @@ import { boot } from "@qovira/theme/boot"; // the raw snippet, as a string
 ### 3. Toggle / persist — `@qovira/theme/runtime`
 
 ```ts
-import {
-  getTheme,
-  setTheme,
-  toggleTheme,
-  subscribe,
-} from "@qovira/theme/runtime";
+import { getTheme, setTheme, toggleTheme, subscribe } from "@qovira/theme/runtime";
 ```
 
 Framework-agnostic get/set/persist with cross-tab sync. A Svelte store/rune
@@ -241,6 +236,40 @@ pnpm typecheck   # tsc --noEmit
 pnpm lint        # eslint + prettier --check
 pnpm test        # vitest run
 ```
+
+## Versioning & releases
+
+`@qovira/theme` follows **[semantic versioning](https://semver.org)**. It's the
+upstream of the Qovira stack: a breaking change here (a removed token, a changed
+runtime API) ripples to every consumer, so the version is a real contract.
+
+| Bump      | What changed                                                                                                                                                                 |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **major** | A breaking change: a token/utility/entry-point removed or renamed, a breaking runtime-API or storage-key change, a dropped theme/font, or a raised `tailwindcss` peer range. |
+| **minor** | A backward-compatible addition: a new token, utility, font, or additive runtime API.                                                                                         |
+| **patch** | A backward-compatible fix: a corrected token value, an accessibility/contrast fix, or a runtime edge-case fix.                                                               |
+
+### Cutting a release
+
+Versioning and the changelog are driven by
+[Changesets](https://github.com/changesets/changesets). The flow:
+
+1. **As you work**, record each consumer-visible change with a changeset —
+   `pnpm changeset` prompts for the bump level (per the table above) and a
+   summary, writing a file under `.changeset/`. (See `.changeset/README.md`.)
+2. **To release**, run `pnpm version-packages` (`changeset version`) on `main`:
+   it consumes the pending changesets, bumps `package.json`, and updates
+   `CHANGELOG.md`. Commit that, then create and push a matching `vX.Y.Z` tag.
+3. **The tag triggers** [`.github/workflows/release.yml`](.github/workflows/release.yml):
+   the full gate (tag-vs-`package.json`, build, lint, typecheck, test) runs on
+   Blacksmith, then a single GitHub-hosted job publishes to npm via **Trusted
+   Publishing** (tokenless OIDC) with a **provenance attestation**. Only `dist/`
+   is in the published tarball (`files: ["dist"]`).
+
+> **One-time npm setup** (outside this repo): on npmjs.com, configure
+> `@qovira/theme`'s **Trusted Publisher** to point at this repository and the
+> release workflow. No `NPM_TOKEN` secret is used — Trusted Publishing replaces
+> long-lived tokens entirely.
 
 ## Contributing
 

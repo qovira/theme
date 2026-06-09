@@ -22,6 +22,8 @@ pnpm typecheck   # tsc --noEmit
 pnpm lint        # eslint + prettier --check
 pnpm format      # prettier --write
 pnpm test        # vitest run
+pnpm changeset           # record a changeset (drives versioning); see .changeset/
+pnpm version-packages    # changeset version: consume changesets, bump + changelog
 ```
 
 pnpm is the only package manager (npm/yarn are banned). pnpm settings (e.g.
@@ -87,16 +89,25 @@ literal (it's standalone); a test asserts the two agree.
   honey-800 (`#7e4f1c`); daylight `--warning-text` is `#855400`.
 - **Don't put Linear issue references** (`QOV-…`) in source, comments, or docs —
   the codebase stands on its own. Issue IDs belong only in commit messages.
+- **Versioning** is driven by **Changesets** (`.changeset/`): `pnpm changeset`
+  records a consumer-visible change; `pnpm version-packages` (`changeset version`)
+  consumes them on `main`, bumps `package.json`, and writes `CHANGELOG.md`. Bump
+  contract in `.changeset/README.md` (major = removed/renamed token·utility·entry
+  ·breaking runtime/storage change·dropped theme·font·raised `tailwindcss` range;
+  minor = additive token·utility·font·runtime API; patch = token-value/contrast/
+  runtime-edge fix). Then push a matching `v*` tag to release.
 - **CI** (`writing-workflows`): jobs run on **Blacksmith** runners — except the
   `release.yml` publish job, which must run GitHub-hosted because npm provenance
   (sigstore) is only attestable there (Blacksmith reports as self-hosted → the
-  registry 422s). `ci.yml` = build+lint+typecheck+test; `release.yml` publishes
-  on a `v*` tag (OIDC trusted publishing + provenance; guards that the tag ==
-  `package.json` version).
+  registry 422s). `ci.yml` = build+lint+typecheck+test. `release.yml` (on a `v*`
+  tag) is **two jobs**: a `verify` gate on Blacksmith (tag == `package.json`
+  guard, then build+lint+typecheck+test) → a minimal GitHub-hosted `publish`
+  (build + `pnpm publish` via OIDC trusted publishing + provenance). Never
+  publish something that didn't pass the gate.
 - **Contributor docs:** `CONTRIBUTING.md` (outside-PR workflow, scope, the
-  tests-required-for-new-tokens rule) and `CODE_OF_CONDUCT.md` (Contributor
-  Covenant) define the human-contributor process; keep them in sync with these
-  conventions.
+  tests-required-for-new-tokens rule, changesets) and `CODE_OF_CONDUCT.md`
+  (Contributor Covenant) define the human-contributor process; keep them in sync
+  with these conventions.
 
 ## Testing
 

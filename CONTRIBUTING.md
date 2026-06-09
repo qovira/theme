@@ -190,9 +190,27 @@ Once there's an issue and your change is ready:
 3. **Run the full check locally** — `pnpm build && pnpm lint && pnpm typecheck &&
 pnpm test` — before you push. CI runs exactly these, and the same four must be
    green to merge.
-4. **Write a clear PR description.** Say what changed and why, and link the issue
+4. **Add a changeset** for any consumer-visible change (see [Changesets](#changesets)).
+5. **Write a clear PR description.** Say what changed and why, and link the issue
    it resolves. A good title is enough; you don't need to agonize over commit
    formatting (see below).
+
+### Changesets
+
+Consumer-visible changes are versioned with [Changesets](https://github.com/changesets/changesets).
+If your change affects what ships, run `pnpm changeset` and commit the generated
+file — it prompts for the bump level and a summary:
+
+- **major** — removing/renaming a token, utility, or entry point; a breaking
+  runtime-API or storage-key change; dropping a theme or font; or raising the
+  `tailwindcss` peer range.
+- **minor** — a new token, utility, font, or additive runtime API.
+- **patch** — a corrected token value, an accessibility/contrast fix, or a
+  runtime edge-case fix, with no surface change.
+
+A changeset is the most useful thing you can add, but it's not a blocker — if
+you're unsure of the level or forget, a maintainer will add one on merge. See
+`.changeset/README.md`.
 
 ### Commits
 
@@ -217,13 +235,19 @@ merge.
 
 ## Releases
 
-Releasing is **maintainers only** — there's nothing for a contributor to do here,
-but it's documented so the process isn't a mystery. Publishing is driven by a
-git tag, never a manual `pnpm publish`: pushing a `v*` tag (e.g. `v1.2.3`)
-triggers the release workflow, which verifies the tag matches `package.json`,
-builds, and publishes `@qovira/theme` to npm with a signed provenance
+Releasing is **maintainers only** — there's nothing for a contributor to do here
+beyond landing a changeset, but it's documented so the process isn't a mystery.
+Versioning and the changelog are driven by Changesets: `pnpm version-packages`
+(`changeset version`) consumes the pending changesets on `main`, bumps
+`package.json`, and writes `CHANGELOG.md`. The maintainer commits that and pushes
+the matching `v*` tag (e.g. `v1.2.3`).
+
+The tag — never a manual `pnpm publish` — drives the release workflow, which
+first runs the **full gate on Blacksmith** (verifies the tag matches
+`package.json`, then build + lint + typecheck + test) and only then publishes
+`@qovira/theme` to npm from a single GitHub-hosted job with a signed provenance
 attestation via OIDC trusted publishing. A tag whose version doesn't match
-`package.json` fails before anything is published.
+`package.json` fails before anything is built or published.
 
 ---
 
