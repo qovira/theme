@@ -45,7 +45,7 @@ describe("primitive design tokens", () => {
       // Status base
       "--color-success": "#2f9e6b",
       "--color-warning": "#e08a1e",
-      "--color-error": "#d6452e",
+      "--color-error": "#cc4029",
       "--color-info": "#3b72c0",
     };
     for (const [name, hex] of Object.entries(colors)) {

@@ -55,7 +55,7 @@
    * Per-theme tint/text aliases live in the semantic layer. */
   --color-success: #2f9e6b;
   --color-warning: #e08a1e;
-  --color-error: #d6452e;
+  --color-error: #cc4029; /* darkened from #d6452e so white text clears WCAG AA (4.5:1) on bg-error fills */
   --color-info: #3b72c0;
 
   /* Font families. font-family is intentionally NOT carried by the --text-*

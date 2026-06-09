@@ -38,6 +38,10 @@ const pairings: readonly (readonly [string, string, string])[] = [
   // Primary button label on fill
   ["btn-primary · daylight", "#f1e9dc", "#1e1712"],
   ["btn-primary · evening", "#1e1712", "#e0a458"],
+  // Destructive button: white label on the error fill (`bg-error text-white`),
+  // 14px/500 normal text → AA 4.5:1. Theme-constant, so one pairing covers both
+  // themes. The fill must stay dark enough for white text (see --color-error).
+  ["destructive btn · white on error", "#ffffff", "#cc4029"],
   // Key-CTA: warm-900 label on honey accent
   ["key-CTA", "#1e1712", "#e0a458"],
   // Status text on tint — daylight
