@@ -1,8 +1,10 @@
 name: Release
 
 # Releases are a tag push, not a manual `pnpm publish`. Pushing a version tag
-# (e.g. v1.2.3) builds and publishes @qovira/theme to npmjs. Non-tag pushes
-# never reach this workflow.
+# (e.g. v1.2.3) gates the build on Blacksmith and then publishes @qovira/theme
+# to npmjs. Non-tag pushes never reach this workflow. The tag is cut after
+# `changeset version` has bumped package.json + written CHANGELOG.md on main —
+# see CONTRIBUTING.md "Releases".
 on:
   push:
     tags:
@@ -10,21 +12,19 @@ on:
 
 permissions:
   contents: read
-  id-token: write # OIDC: trusted-publishing auth + provenance attestation
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  publish:
-    # Exception to the house "every job on Blacksmith" rule: npm provenance
-    # (sigstore) is only attestable from GitHub-hosted runners — Blacksmith
-    # reports as "self-hosted", which the registry rejects with a 422. This is
-    # the one job that must run on a GitHub-hosted runner.
-    runs-on: ubuntu-latest
+  # The full gate, on Blacksmith (writing-workflows): never publish something
+  # that doesn't build, lint, typecheck, and test — and never publish a tag whose
+  # version disagrees with package.json.
+  verify:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -36,7 +36,7 @@ jobs:
           cache: pnpm
 
       # Guard: the tag is the source of truth. A tag whose version does not
-      # match package.json fails here, before anything is published.
+      # match package.json fails here, before anything is built or published.
       - name: Verify tag matches package.json version
         run: |
           tag="${GITHUB_REF_NAME#v}"
@@ -46,6 +46,45 @@ jobs:
             echo "::error::Pushed tag v$tag does not match package.json version $pkg"
             exit 1
           fi
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+  # EXCEPTION to the Blacksmith-everywhere rule (writing-workflows): npm Trusted
+  # Publishing (OIDC) and provenance attestations work ONLY on GitHub-hosted
+  # runners — Blacksmith reports as self-hosted, which the registry rejects with
+  # a 422. This is the one job that must leave Blacksmith; keep it as small as
+  # possible (build + publish only).
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC: trusted-publishing auth + provenance attestation
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
