@@ -6,8 +6,9 @@ Guidance for working in `@qovira/theme`.
 
 `@qovira/theme` is Qovira's visual foundation as a distributable npm package:
 **Tailwind v4 tokens, self-hosted fonts, and a small framework-agnostic theming
-runtime**. It is the single source of color/type/spacing/radius/elevation/motion
-and the two themes (Daylight, Evening) for every Qovira surface — the product web
+runtime**. It is the single source of color/type/radius/elevation/motion (spacing
+rides Tailwind's stock 4px grid) and the two themes (Daylight, Evening) for every
+Qovira surface — the product web
 app (SvelteKit) and the marketing site. It ships only CSS + fonts + a tiny TS
 runtime; it has **no framework dependency** and is **not** a component library.
 
@@ -86,9 +87,16 @@ literal (it's standalone); a test asserts the two agree.
   honey-800 (`#7e4f1c`); daylight `--warning-text` is `#855400`.
 - **Don't put Linear issue references** (`QOV-…`) in source, comments, or docs —
   the codebase stands on its own. Issue IDs belong only in commit messages.
-- **CI** (`writing-workflows`): every job runs on a **Blacksmith** runner. `ci.yml`
-  = build+lint+typecheck+test; `release.yml` publishes on a `v*` tag (provenance;
-  guards that the tag == `package.json` version).
+- **CI** (`writing-workflows`): jobs run on **Blacksmith** runners — except the
+  `release.yml` publish job, which must run GitHub-hosted because npm provenance
+  (sigstore) is only attestable there (Blacksmith reports as self-hosted → the
+  registry 422s). `ci.yml` = build+lint+typecheck+test; `release.yml` publishes
+  on a `v*` tag (OIDC trusted publishing + provenance; guards that the tag ==
+  `package.json` version).
+- **Contributor docs:** `CONTRIBUTING.md` (outside-PR workflow, scope, the
+  tests-required-for-new-tokens rule) and `CODE_OF_CONDUCT.md` (Contributor
+  Covenant) define the human-contributor process; keep them in sync with these
+  conventions.
 
 ## Testing
 
@@ -97,7 +105,7 @@ Tests live in `tests/` (Vitest). CSS is verified by **actually compiling
 with `@source inline(...)` — then asserting on the emitted variables/utilities;
 this is the source of truth for "does this token/utility resolve". Runtime tests
 use `// @vitest-environment happy-dom` plus `tests/setup-dom.ts` (an in-memory
-`localStorage` polyfill — neither happy-dom nor Node 26 exposes a usable one
+`localStorage` polyfill — neither happy-dom nor Node exposes a usable one
 here). `tests/recipes.test.ts` extracts every utility string from the README
 recipes and asserts each resolves, so the docs can't drift from the shipped CSS.
 

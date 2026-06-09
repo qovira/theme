@@ -2,16 +2,17 @@
 
 Qovira's visual foundation as a distributable package: **Tailwind v4 tokens**,
 **self-hosted fonts**, and a small **framework-agnostic theming runtime**. It is
-the single source of color, type, spacing, radius, elevation, motion, and the two
-themes — **Daylight** and **Evening** — shared by every Qovira surface (the
-product web app and the [qovira.ai](http://qovira.ai) marketing site), so the
-brand stays identical across them without copy-paste.
+the single source of color, type, radius, elevation, and motion — plus spacing on
+Tailwind's stock 4px grid — and the two themes, **Daylight** and **Evening**,
+shared by every Qovira surface (the product web app and the
+[qovira.ai](https://qovira.ai) marketing site), so the brand stays identical
+across them without copy-paste.
 
 The package is the _foundation_ a component library is built on — it ships only
 tokens, fonts, and a tiny runtime, and has **no framework dependency**.
 
-> Status: early development. Tokens, fonts, runtime, and utilities are being
-> filled in; some entry points still resolve to placeholders.
+> Status: stable (1.0). Tokens, fonts, runtime, and utilities are shipped; all
+> four entry points resolve to real assets.
 
 ## Install
 
@@ -235,11 +236,17 @@ Use `rounded-full` only for true pills, toggles, and avatars.
 
 ```sh
 pnpm install
-pnpm build       # tsup → dist/{runtime,boot}.js + copy CSS/fonts → dist/
+pnpm build       # tsup → dist/{runtime,boot}.js (+ .d.ts) + copy CSS/fonts → dist/
 pnpm typecheck   # tsc --noEmit
 pnpm lint        # eslint + prettier --check
 pnpm test        # vitest run
 ```
+
+## Contributing
+
+Contributions are welcome — read [CONTRIBUTING.md](./CONTRIBUTING.md) first, and
+please follow the [Code of Conduct](./CODE_OF_CONDUCT.md). Open an issue before
+sending a PR that adds or changes a token, color, or entry point.
 
 ## License
 
