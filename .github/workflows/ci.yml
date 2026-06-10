@@ -16,7 +16,7 @@ jobs:
   verify:
     runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # engine-strict (.npmrc) makes pnpm 11's engines.node (>=22.13) a hard
       # error, and action-setup's self-installer runs under the runner's bundled
@@ -24,12 +24,12 @@ jobs:
       # @pnpm/exe (Node-bundled pnpm, no engines.node field), so the bootstrap
       # isn't gated on the runner's Node version.
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           standalone: true
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: pnpm
