@@ -26,19 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Node before pnpm: pnpm/action-setup bootstraps pnpm using the Node on
-      # PATH, and the runner default (v20) is below pnpm 11's engines.node
-      # (>=22.13) — which engine-strict (.npmrc) makes a hard error. setup-node's
-      # `cache: pnpm` needs pnpm present, so it runs again after action-setup.
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
+      # engine-strict (.npmrc) makes pnpm 11's engines.node (>=22.13) a hard
+      # error, and action-setup's self-installer runs under the runner's bundled
+      # Node (v20) — setup-node order can't change that. standalone installs
+      # @pnpm/exe (Node-bundled pnpm, no engines.node field), so the bootstrap
+      # isn't gated on the runner's Node version.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
+        with:
+          standalone: true
 
-      - name: Set up Node with pnpm cache
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -85,17 +83,14 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Node before pnpm (see verify): the publish runner's default Node is also
-      # below pnpm 11's engines.node, which engine-strict makes fatal.
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
+      # standalone @pnpm/exe (see verify): avoids the engine-strict bootstrap
+      # failure on the publish runner's old default Node.
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
+        with:
+          standalone: true
 
-      - name: Set up Node with pnpm cache
+      - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
