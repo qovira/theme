@@ -81,6 +81,11 @@ literal (it's standalone); a test asserts the two agree.
 
 ## Conventions
 
+- **Green before `main`/PR.** `pnpm lint`, `pnpm typecheck`, `pnpm test`, and
+  `pnpm build` must all pass before you push to `main` or open a PR — run them
+  and confirm green first. Pushing not-yet-passing commits to a **feature
+  branch** is fine; the gate is enforced at the `main`/PR boundary, not on every
+  commit.
 - **TypeScript** per the `writing-ts` house skill: ESM-only, `@tsconfig/strictest`,
   TS 6.x (`ignoreDeprecations: "6.0"` because strictest still sets `baseUrl`).
 - **Accessibility is enforced, not aspirational.** All text pairings must meet
