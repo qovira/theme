@@ -18,10 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # Node before pnpm: pnpm/action-setup bootstraps pnpm using the Node on
+      # PATH, and the runner default (v20) is below pnpm 11's engines.node
+      # (>=22.13) — which engine-strict (.npmrc) makes a hard error. setup-node's
+      # `cache: pnpm` needs pnpm present, so it runs again after action-setup.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Set up Node
+      - name: Set up Node with pnpm cache
         uses: actions/setup-node@v4
         with:
           node-version: 24
