@@ -17,8 +17,8 @@ tokens, fonts, and a tiny runtime, and has **no framework dependency**.
 ## Install
 
 This package requires [Tailwind CSS v4](https://tailwindcss.com) in the consumer
-(both consumers use the `@tailwindcss/vite` plugin). The package manager is
-**pnpm**.
+(both consumers use the `@tailwindcss/vite` plugin) and **Node `>=24`**. The
+package manager is **pnpm**.
 
 ```sh
 pnpm add @qovira/theme

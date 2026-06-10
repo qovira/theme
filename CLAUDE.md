@@ -86,6 +86,12 @@ literal (it's standalone); a test asserts the two agree.
   and confirm green first. Pushing not-yet-passing commits to a **feature
   branch** is fine; the gate is enforced at the `main`/PR boundary, not on every
   commit.
+- **Keep `CLAUDE.md` and `README.md` current.** Both are documentation that must
+  track reality: when a change alters something either file describes (commands,
+  layout, the token architecture, the runtime API, conventions, the versioning/
+  release flow), update the affected doc automatically in the **same** change —
+  never leave it as a follow-up. Stale docs silently mislead every future reader
+  and session.
 - **TypeScript** per the `writing-ts` house skill: ESM-only, `@tsconfig/strictest`,
   TS 6.x (`ignoreDeprecations: "6.0"` because strictest still sets `baseUrl`).
 - **Accessibility is enforced, not aspirational.** All text pairings must meet
