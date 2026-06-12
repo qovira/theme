@@ -134,7 +134,16 @@ describe("Daylight and Evening themes", () => {
   it("diverges the two themes (a single attribute switch flips every role)", () => {
     // For the roles that carry meaning, Daylight and Evening must differ, which
     // is what makes `data-theme` alone repaint the UI with no component edits.
-    for (const token of ["--surface", "--surface-raised", "--text", "--text-muted", "--border-hairline", "--link", "--btn-primary", "--btn-primary-fg"]) {
+    for (const token of [
+      "--surface",
+      "--surface-raised",
+      "--text",
+      "--text-muted",
+      "--border-hairline",
+      "--link",
+      "--btn-primary",
+      "--btn-primary-fg",
+    ]) {
       expect(daylight[token], token).not.toBe(evening[token]);
     }
   });
