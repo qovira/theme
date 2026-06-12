@@ -31,7 +31,8 @@
     "./boot": "./dist/boot.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "publishConfig": {
     "access": "public"
