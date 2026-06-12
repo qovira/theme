@@ -81,11 +81,6 @@ literal (it's standalone); a test asserts the two agree.
 
 ## Conventions
 
-- **Green before `main`/PR.** `pnpm lint`, `pnpm typecheck`, `pnpm test`, and
-  `pnpm build` must all pass before you push to `main` or open a PR — run them
-  and confirm green first. Pushing not-yet-passing commits to a **feature
-  branch** is fine; the gate is enforced at the `main`/PR boundary, not on every
-  commit.
 - **Keep `CLAUDE.md` and `README.md` current.** Both are documentation that must
   track reality: when a change alters something either file describes (commands,
   layout, the token architecture, the runtime API, conventions, the versioning/
@@ -98,8 +93,6 @@ literal (it's standalone); a test asserts the two agree.
   WCAG AA — `tests/contrast.test.ts` computes the ratios. Note: honey-700
   (`#a66b28`) is **AA-large only** on cream, so the daylight `--link` uses
   honey-800 (`#7e4f1c`); daylight `--warning-text` is `#855400`.
-- **Don't put Linear issue references** (`QOV-…`) in source, comments, or docs —
-  the codebase stands on its own. Issue IDs belong only in commit messages.
 - **Versioning** is driven by **Changesets** (`.changeset/`): `pnpm changeset`
   records a consumer-visible change; `pnpm version-packages` (`changeset version`)
   consumes them on `main`, bumps `package.json`, and writes `CHANGELOG.md`. Bump
