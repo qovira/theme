@@ -1,6 +1,6 @@
 {
   "name": "@qovira/theme",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Qovira's visual foundation — Tailwind v4 tokens, self-hosted fonts, and a framework-agnostic theming runtime.",
   "keywords": [
     "qovira",
