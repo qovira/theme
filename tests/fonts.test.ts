@@ -57,12 +57,18 @@ describe("self-hosted fonts", () => {
 
   it("covers the brand weights (Figtree 400/500/600, Fraunces 500/600)", () => {
     // Each family is a single variable file; its weight range must span the
-    // discrete weights the brand uses.
-    const inRange = (range: string, w: number): boolean => {
-      const [lo, hi] = range.split(" ").map(Number) as [number, number];
-      return w >= lo && w <= hi;
+    // discrete weights the brand uses. Read the range from the SHIPPED @font-face
+    // so narrowing a family's variable axis in fonts.css fails this test.
+    const rangeOf = (family: string): [number, number] => {
+      const match = /font-weight:\s*(\d+)\s+(\d+)/.exec(face(family));
+      if (!match) throw new Error(`no variable font-weight range for ${family}`);
+      return [Number(match[1]), Number(match[2])];
     };
-    expect(["100 900"].every((r) => [500, 600].every((w) => inRange(r, w)))).toBe(true);
-    for (const w of [400, 500, 600]) expect(inRange("300 900", w)).toBe(true);
+    const covers = (family: string, weights: readonly number[]): void => {
+      const [lo, hi] = rangeOf(family);
+      for (const w of weights) expect(w >= lo && w <= hi, `${family} ${String(w)}`).toBe(true);
+    };
+    covers("Fraunces", [500, 600]);
+    covers("Figtree", [400, 500, 600]);
   });
 });

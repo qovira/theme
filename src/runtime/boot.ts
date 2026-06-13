@@ -26,7 +26,7 @@ export const boot = `(function () {
           ? "evening"
           : "daylight";
     document.documentElement.setAttribute("data-theme", t);
-  } catch (e) {
+  } catch {
     document.documentElement.setAttribute("data-theme", "evening");
   }
 })();`;

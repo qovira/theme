@@ -7,11 +7,18 @@
  * localStorage key, and notifies subscribers — including across tabs via the
  * `storage` event. Pre-paint application is the boot snippet's job (`./boot`);
  * a Svelte store/rune wrapper and the theme-control UI are the app's concern.
+ *
+ * Browser-only: every export touches `document`/`window`, so call these after
+ * the DOM exists (e.g. from `onMount`/an effect), never at module scope during
+ * SSR. "Framework-agnostic" means framework-independent, not server-safe.
  */
 export type Theme = "daylight" | "evening";
 
-/** Must match the literal used in the boot snippet (`./boot`). */
-const STORAGE_KEY = "qovira-theme";
+/**
+ * The localStorage key. Exported so the boot snippet's duplicated literal can be
+ * cross-checked against it in a test (the snippet can't import — see `./boot`).
+ */
+export const STORAGE_KEY = "qovira-theme";
 
 type Listener = (theme: Theme) => void;
 const listeners = new Set<Listener>();
@@ -45,9 +52,13 @@ function bindStorage(): void {
   if (storageBound) return;
   storageBound = true;
   window.addEventListener("storage", (event) => {
-    if (event.key !== STORAGE_KEY) return;
-    // Another tab changed (or cleared) the stored choice; re-resolve and apply.
+    // `key === null` is a bulk `localStorage.clear()` in another tab (no per-key
+    // removal), which also affects us; anything else unrelated to our key isn't.
+    if (event.key !== null && event.key !== STORAGE_KEY) return;
+    // Another tab changed or cleared the stored choice; re-resolve and apply.
     const next = resolve();
+    // Skip a same-value write from another tab so subscribers don't get a no-op.
+    if (next === document.documentElement.getAttribute("data-theme")) return;
     apply(next);
     emit(next);
   });

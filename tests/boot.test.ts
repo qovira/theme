@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { boot } from "../src/runtime/boot.js";
+import { STORAGE_KEY } from "../src/runtime/theme.js";
 
 /** Execute the shipped boot string exactly as an inlined <script> would. */
 function runBoot(): void {
@@ -39,6 +40,13 @@ describe("boot snippet", () => {
   it("exports a non-empty string for inlining in <head>", () => {
     expect(typeof boot).toBe("string");
     expect(boot.length).toBeGreaterThan(0);
+  });
+
+  it("uses the same storage key as the runtime", () => {
+    // The snippet hardcodes the key because it can't import; this is the guard
+    // that the duplicated literal never drifts from the runtime's STORAGE_KEY.
+    const match = /localStorage\.getItem\("([^"]+)"\)/.exec(boot);
+    expect(match?.[1]).toBe(STORAGE_KEY);
   });
 
   it("honors a stored choice over the system preference", () => {
